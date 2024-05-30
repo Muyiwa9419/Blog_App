@@ -3,30 +3,6 @@ const filterByPublished = (req, res, next) => {
     req.findFilter.state = 'published'
     next()
   }
-
-
-  const cacheMiddleware = (req, res, next) => {
-    if (req.method !== 'GET') {
-      return next(); // Only cache GET requests
-    }
-  
-    const key = req.originalUrl || req.url; // Use the original URL as the cache key
-    const cachedResponse = cache.get(key);
-  
-    if (cachedResponse) {
-      console.log(`Cache hit for ${key}`);
-      return res.send(cachedResponse); // Return the cached response if it exists
-    } else {
-      console.log(`Cache miss for ${key}`);
-      // Replace res.send to cache the response before sending it
-      res.sendResponse = res.send;
-      res.send = (body) => {
-        cache.set(key, body); // Cache the response body
-        res.sendResponse(body);
-      };
-      next();
-    }
-  };
   
   const filterAndSort = (req, res, next) => {
     // prepare filter/search attributes
@@ -97,5 +73,4 @@ const filterByPublished = (req, res, next) => {
     filterAndSort,
     list,
     setUserFilter,
-    cacheMiddleware,
   }

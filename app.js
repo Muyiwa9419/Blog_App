@@ -7,7 +7,8 @@ const signup = require('./routes/signup')
 const login = require('./controllers/login')
 const blog = require('./routes/blog')
 const schema = require('./controllers/joiSchema')
-const cacheMiddleware = require('./middleware/apiFeatures')
+const cacheMiddleware = require('./routeCache')
+
 
 
 const app = express()
@@ -36,7 +37,9 @@ app.use(express.urlencoded({ extended: false }))
 
 app.use('/api/signup', validateRequest(schema), signup)
 app.use('/api/login', login)
-app.use('/api/blog', blog)
+app.use('/api/blog', blog, cacheMiddleware)
+
+
 
 
 // use error handler middleware
